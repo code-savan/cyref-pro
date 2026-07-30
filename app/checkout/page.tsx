@@ -204,10 +204,10 @@ function PaymentModal({ total, onClose, onConfirmed }: { total: number; onClose:
           <>
             <div className="flex items-start justify-between gap-5 border-b border-slate-200 p-6">
               <div>
-                <p className="text-sm font-semibold text-slate-500">USDC (ERC20) payment</p>
+                <p className="text-sm font-semibold text-slate-500">USDT (ERC20) payment</p>
                 <h2 className="mt-1 text-3xl font-bold tracking-tight text-slate-950 font-heading">Complete Payment</h2>
                 <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-500">
-                  Send exactly <strong className="text-slate-950">${total.toLocaleString()} USDC</strong> to the address below.
+                  Send exactly <strong className="text-slate-950">${total.toLocaleString()} USDT</strong> to the address below.
                 </p>
               </div>
               <button
@@ -222,11 +222,11 @@ function PaymentModal({ total, onClose, onConfirmed }: { total: number; onClose:
             <div className="grid gap-6 p-6 md:grid-cols-[220px_1fr] items-stretch">
               <div className="flex flex-col items-center rounded-lg pt-4">
                 <p className="text-lg font-bold text-slate-950">Scan code</p>
-                <p className="mt-1 text-xs text-slate-400">Pay with USDC (ERC20)</p>
+                <p className="mt-1 text-xs text-slate-400">Pay with USDT (ERC20)</p>
                 <div className="my-4 h-px w-full bg-slate-200" />
                 <img
                   src="/scan.jpeg"
-                    alt="USDC Wallet QR Code"
+                    alt="USDT Wallet QR Code"
                   className="h-48 w-48 rounded-2xl object-contain"
                 />
               </div>
@@ -502,7 +502,7 @@ function CheckoutForm() {
                     <ZapIcon className="h-5 w-5" />
                   </span>
                   <span>
-                    <span className="block text-sm font-bold text-slate-950">USDC (ERC20)</span>
+                    <span className="block text-sm font-bold text-slate-950">USDT (ERC20)</span>
                   </span>
                 </button>
                 <button className="flex items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-left text-slate-400" disabled>

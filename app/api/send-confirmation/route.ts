@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     <tr><td style="font-size:13px;color:#64748b;padding:2px 0">Receipt #</td><td style="font-size:13px;color:#0f172a;font-weight:600;padding:2px 0">${receiptId}</td></tr>
     <tr><td style="font-size:13px;color:#64748b;padding:2px 0">Date</td><td style="font-size:13px;color:#0f172a;font-weight:600;padding:2px 0">${dateStr}</td></tr>
     <tr><td style="font-size:13px;color:#64748b;padding:2px 0">Customer</td><td style="font-size:13px;color:#0f172a;font-weight:600;padding:2px 0">${name} &lt;${email}&gt;</td></tr>
-    <tr><td style="font-size:13px;color:#64748b;padding:2px 0">Payment</td><td style="font-size:13px;color:#0f172a;font-weight:600;padding:2px 0">USDC (ERC20)</td></tr>
+    <tr><td style="font-size:13px;color:#64748b;padding:2px 0">Payment</td><td style="font-size:13px;color:#0f172a;font-weight:600;padding:2px 0">USDT (ERC20)</td></tr>
     <tr><td style="font-size:13px;color:#64748b;padding:2px 0">Status</td><td style="font-size:13px;color:#059669;font-weight:600;padding:2px 0">Paid — pending review</td></tr>
   </table>
 

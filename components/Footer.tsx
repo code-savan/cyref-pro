@@ -1,10 +1,7 @@
 import Image from "next/image";
 import { GlobeIcon } from "./ui/Icons";
 
-const sectionLinks: Record<string, string> = {
-  Features: "/#features",
-  Pricing: "/#pricing",
-  Integrations: "/#integrations",
+const internalLinks: Record<string, string> = {
   About: "/about",
   Contact: "/contact",
   "Privacy Policy": "/privacy",
@@ -13,7 +10,6 @@ const sectionLinks: Record<string, string> = {
 };
 
 const footerLinks = {
-  Product: ["Features", "Pricing", "Integrations"],
   Company: ["About", "Contact"],
   Legal: ["Privacy Policy", "Terms of Service", "Cookie Policy"],
 };
@@ -65,14 +61,11 @@ export function Footer() {
             <div key={title}>
               <h3 className="text-sm font-semibold text-slate-900 font-heading">{title}</h3>
               <ul className="mt-4 space-y-3">
-                {links.map((link) => {
-                  const href = sectionLinks[link] || "#";
-                  return (
-                    <li key={link}>
-                      <FooterLink href={href}>{link}</FooterLink>
-                    </li>
-                  );
-                })}
+                {links.map((link) => (
+                  <li key={link}>
+                    <FooterLink href={internalLinks[link] || "#"}>{link}</FooterLink>
+                  </li>
+                ))}
               </ul>
             </div>
           ))}

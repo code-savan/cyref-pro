@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Secure Checkout",
   description:
-    "Review your Cyref Pro VPS protection stack, exact USDC total, and deployment handoff before payment.",
+    "Review your Cyref Pro VPS protection stack, exact USDT total, and deployment handoff before payment.",
   alternates: {
     canonical: "/checkout",
   },
