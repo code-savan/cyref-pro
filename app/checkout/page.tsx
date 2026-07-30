@@ -491,9 +491,7 @@ function CheckoutForm() {
 
       <main className="mx-auto max-w-6xl px-5 py-8 pb-28 lg:px-8 lg:py-12">
         <div className="mb-8 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-          <span>Services</span>
-          <span className="text-slate-300">›</span>
-          <span>Professional</span>
+          <span>Checkout</span>
           <span className="text-slate-300">›</span>
           <span>Payment</span>
           <span className="text-slate-300">›</span>
