@@ -15,7 +15,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cyref.pro"),
+  metadataBase: new URL("https://cyref-pro.swiftvult.com"),
   title: {
     default: "Cyref Pro | Managed VPS Security for cPanel Teams",
     template: "%s | Cyref Pro",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Cyref Pro | Managed VPS Security for cPanel Teams",
     description:
       "Build a trusted VPS protection plan with transparent checkout, high-trust proof, and guided deployment support.",
-    url: "https://cyref.pro",
+    url: "https://cyref-pro.swiftvult.com",
     siteName: "Cyref Pro",
     images: [{ url: "/logo.png", width: 512, height: 512 }],
     locale: "en_US",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     title: "Cyref Pro | Managed VPS Security for cPanel Teams",
     description:
       "AI-assisted firewall, malware scanning, file monitoring, and guided cPanel deployment support.",
-    images: ["/logo.png"],
+    images: ["/icon.png"],
   },
   formatDetection: {
     email: false,
