@@ -11,7 +11,7 @@ const testimonials = [
     role: "Head of Security",
     company: "Grainor",
     rating: 5,
-    avatar: "/testimonials/shon.jpg",
+    avatar: "/t3.png",
   },
   {
     quote:
@@ -20,7 +20,7 @@ const testimonials = [
     role: "Engineering Lead",
     company: "CloudScale",
     rating: 5,
-    avatar: "/testimonials/sarah.jpg",
+    avatar: "/t1.png",
   },
   {
     quote:
@@ -29,7 +29,7 @@ const testimonials = [
     role: "CTO",
     company: "RevBoost",
     rating: 5,
-    avatar: "/testimonials/mark.jpg",
+    avatar: "/t4.png",
   },
   {
     quote:
@@ -38,7 +38,7 @@ const testimonials = [
     role: "Security Director",
     company: "FinSecure",
     rating: 5,
-    avatar: "/testimonials/jessica.jpg",
+    avatar: "/t2.png",
   },
 ];
 
