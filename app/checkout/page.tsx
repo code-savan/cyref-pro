@@ -100,16 +100,21 @@ function Field({
   onChange,
   placeholder,
   type = "text",
+  required,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
   type?: string;
+  required?: boolean;
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-semibold text-slate-950">{label}</span>
+      <span className="mb-2 block text-sm font-semibold text-slate-950">
+        {label}
+        {required && <span className="ml-0.5 text-red-500">*</span>}
+      </span>
       <input
         type={type}
         value={value}
@@ -389,6 +394,8 @@ function CheckoutForm() {
     return allPrices - fullKit;
   }, [fullKitActive]);
 
+  const detailsComplete = name.trim() && email.trim() && company.trim();
+
   if (submitted) {
     const receiptId = `CYREF-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
     const planName = fullKitActive ? "Full Kit — All 10 Extensions" : baseProduct.name;
@@ -542,10 +549,10 @@ function CheckoutForm() {
 
             <CheckoutSection title="Your details">
               <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Full name" value={name} onChange={setName} placeholder="Alex Morgan" />
-                <Field label="Email address" type="email" value={email} onChange={setEmail} placeholder="alex@example.com" />
+                <Field label="Full name" required value={name} onChange={setName} placeholder="Alex Morgan" />
+                <Field label="Email address" required type="email" value={email} onChange={setEmail} placeholder="alex@example.com" />
                 <div className="sm:col-span-2">
-                  <Field label="Company" value={company} onChange={setCompany} placeholder="Acme Hosting LLC" />
+                  <Field label="Company" required value={company} onChange={setCompany} placeholder="Acme Hosting LLC" />
                 </div>
               </div>
             </CheckoutSection>
@@ -761,7 +768,8 @@ function CheckoutForm() {
 
                 <button
                   onClick={() => setShowPaymentModal(true)}
-                  className="mt-6 inline-flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-6 text-sm font-bold text-white transition hover:bg-slate-800"
+                  disabled={!detailsComplete}
+                  className="mt-6 inline-flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-6 text-sm font-bold text-white transition hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Confirm and pay
                   <ArrowRightIcon className="h-4 w-4" />
@@ -793,7 +801,8 @@ function CheckoutForm() {
           </div>
           <button
             onClick={() => setShowPaymentModal(true)}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 text-sm font-bold text-white"
+            disabled={!detailsComplete}
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 text-sm font-bold text-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Pay now
             <ArrowRightIcon className="h-4 w-4" />
