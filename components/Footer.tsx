@@ -1,13 +1,7 @@
 import Image from "next/image";
 import { GlobeIcon } from "./ui/Icons";
 
-const externalLinks = {
-  Changelog: "https://github.com/cyref-pro/changelog",
-  Blog: "https://blog.cyref-pro.swiftvult.com",
-  Careers: "https://linkedin.com/company/cyref-pro",
-};
-
-const internalLinks: Record<string, string> = {
+const sectionLinks: Record<string, string> = {
   Features: "/#features",
   Pricing: "/#pricing",
   Integrations: "/#integrations",
@@ -19,8 +13,8 @@ const internalLinks: Record<string, string> = {
 };
 
 const footerLinks = {
-  Product: ["Features", "Pricing", "Changelog", "Integrations"],
-  Company: ["About", "Blog", "Careers", "Contact"],
+  Product: ["Features", "Pricing", "Integrations"],
+  Company: ["About", "Contact"],
   Legal: ["Privacy Policy", "Terms of Service", "Cookie Policy"],
 };
 
@@ -72,7 +66,7 @@ export function Footer() {
               <h3 className="text-sm font-semibold text-slate-900 font-heading">{title}</h3>
               <ul className="mt-4 space-y-3">
                 {links.map((link) => {
-                  const href = externalLinks[link as keyof typeof externalLinks] || internalLinks[link] || "#";
+                  const href = sectionLinks[link] || "#";
                   return (
                     <li key={link}>
                       <FooterLink href={href}>{link}</FooterLink>

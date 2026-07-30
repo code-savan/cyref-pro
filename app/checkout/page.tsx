@@ -65,6 +65,16 @@ function readCheckoutDraft(): CheckoutDraft {
   if (typeof window === "undefined") return {};
 
   try {
+    const params = new URLSearchParams(window.location.search);
+    const fromParams: CheckoutDraft = {};
+    if (params.get("name")) fromParams.name = params.get("name")!;
+    if (params.get("email")) fromParams.email = params.get("email")!;
+    if (params.get("company")) fromParams.company = params.get("company")!;
+    if (params.get("server")) fromParams.serverDomain = params.get("server")!;
+    if (params.get("cpanel")) fromParams.cpanelUser = params.get("cpanel")!;
+    if (params.get("ext")) fromParams.selected = params.get("ext")!.split(",").filter(Boolean);
+    if (Object.keys(fromParams).length) return fromParams;
+
     const saved = window.localStorage.getItem("cybershield_checkout");
     return saved ? JSON.parse(saved) : {};
   } catch {
@@ -299,6 +309,7 @@ function CheckoutForm() {
   const [cpanelUser, setCpanelUser] = useState(() => readCheckoutDraft().cpanelUser ?? "");
   const [submitted, setSubmitted] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [copiedShareLink, setCopiedShareLink] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(() => {
     const raw = searchParams.get("ext");
     if (raw) return new Set(raw.split(",").filter(Boolean));
@@ -379,6 +390,9 @@ function CheckoutForm() {
               <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
                 Our team will review the payment and send your deployment details and credentials within 24 hours to{" "}
                 <strong className="text-slate-700">{email}</strong>.
+              </p>
+              <p className="mt-3 text-xs text-slate-400 max-w-sm mx-auto">
+                You&apos;ll also receive a confirmation email with your invoice, platform access details, SSH setup guide, and license information.
               </p>
             </div>
 
@@ -602,6 +616,34 @@ function CheckoutForm() {
                   })}
               </div>
             </CheckoutSection>
+
+            <div className="rounded-xl border border-slate-200 bg-white p-5">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">Share checkout</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Send a pre-filled link to your team</p>
+                </div>
+                <button
+                  onClick={() => {
+                    const params = new URLSearchParams();
+                    if (name) params.set("name", name);
+                    if (email) params.set("email", email);
+                    if (company) params.set("company", company);
+                    if (serverDomain) params.set("server", serverDomain);
+                    if (cpanelUser) params.set("cpanel", cpanelUser);
+                    if (selected.size) params.set("ext", Array.from(selected).join(","));
+                    const url = `${window.location.origin}/checkout?${params.toString()}`;
+                    navigator.clipboard.writeText(url);
+                    setCopiedShareLink(true);
+                    setTimeout(() => setCopiedShareLink(false), 2000);
+                  }}
+                  className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-slate-950 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  <CopyIcon className="h-3.5 w-3.5" />
+                  {copiedShareLink ? "Copied!" : "Copy link"}
+                </button>
+              </div>
+            </div>
           </div>
 
           <aside className="lg:sticky lg:top-8">
