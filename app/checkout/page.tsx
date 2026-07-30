@@ -678,14 +678,6 @@ function CheckoutForm() {
 
                 <h3 className="mb-4 text-2xl font-bold tracking-tight text-slate-950 font-heading">Services</h3>
                 <div className="space-y-4">
-                  <div className="border-l-4 border-orange-300 pl-4">
-                    <div className="flex justify-between gap-4">
-                      <p className="font-semibold text-slate-950">{baseProduct.name}</p>
-                      <p className="font-bold text-slate-950">${baseProduct.price}</p>
-                    </div>
-                    <p className="mt-1 text-sm text-slate-500">Core package</p>
-                  </div>
-
                   {fullKitActive ? (
                     <div className="border-l-4 border-orange-300 pl-4">
                       <div className="flex justify-between gap-4">
@@ -694,18 +686,29 @@ function CheckoutForm() {
                       </div>
                       <p className="mt-1 text-sm text-slate-500">All 10 extensions included</p>
                     </div>
-                  ) : visibleSummaryExtensions.length === 0 ? (
-                    <p className="text-sm text-slate-400">No optional add-ons selected.</p>
                   ) : (
-                    visibleSummaryExtensions.map((extension) => (
-                      <div key={extension.id} className="border-l-4 border-orange-200 pl-4">
+                    <>
+                      <div className="border-l-4 border-orange-300 pl-4">
                         <div className="flex justify-between gap-4">
-                          <p className="font-semibold text-slate-950">{extension.name}</p>
-                          <p className="font-bold text-slate-950">${extension.price}</p>
+                          <p className="font-semibold text-slate-950">{baseProduct.name}</p>
+                          <p className="font-bold text-slate-950">${baseProduct.price}</p>
                         </div>
-                        <p className="mt-1 text-sm text-slate-500">Add-on protection</p>
+                        <p className="mt-1 text-sm text-slate-500">Core package</p>
                       </div>
-                    ))
+                      {visibleSummaryExtensions.length === 0 ? (
+                        <p className="text-sm text-slate-400">No optional add-ons selected.</p>
+                      ) : (
+                        visibleSummaryExtensions.map((extension) => (
+                          <div key={extension.id} className="border-l-4 border-orange-200 pl-4">
+                            <div className="flex justify-between gap-4">
+                              <p className="font-semibold text-slate-950">{extension.name}</p>
+                              <p className="font-bold text-slate-950">${extension.price}</p>
+                            </div>
+                            <p className="mt-1 text-sm text-slate-500">Add-on protection</p>
+                          </div>
+                        ))
+                      )}
+                    </>
                   )}
                 </div>
               </div>
