@@ -1,23 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { baseProduct, extensions } from "@/hooks/usePricing";
 
-const BASE_PRICE = 999;
-const FULL_KIT_PRICE = 1999;
 const FULL_KIT_ID = "full-kit";
-
-const extensions = [
-  { id: "threat-intel", name: "Threat Intelligence", price: 299 },
-  { id: "ddos", name: "DDoS Mitigation", price: 249 },
-  { id: "email-smtp", name: "Email & SMTP Protection", price: 199 },
-  { id: "malware", name: "Malware Scanner", price: 179 },
-  { id: "waf", name: "Web Application Firewall", price: 299 },
-  { id: "file-monitor", name: "File Integrity Monitor", price: 149 },
-  { id: "database", name: "Database Security", price: 199 },
-  { id: "siem", name: "SIEM & Log Management", price: 399 },
-  { id: "vuln-scanner", name: "Vulnerability Scanner", price: 199 },
-  { id: "compliance", name: "Compliance & Reporting", price: 149 },
-];
+const FULL_KIT_PRICE = extensions.find((e) => e.id === FULL_KIT_ID)?.price ?? 1999;
+const EXTENSION_LIST = extensions.filter((e) => e.id !== FULL_KIT_ID);
 
 const STORAGE_KEY = "cybershield_admin_draft";
 
@@ -84,9 +72,9 @@ export default function AdminPage() {
   };
 
   const extList = fullKitActive
-    ? extensions
-    : extensions.filter((e) => selectedExts.includes(e.id));
-  const amount = fullKitActive ? FULL_KIT_PRICE : BASE_PRICE + extensions.filter((e) => selectedExts.includes(e.id)).reduce((s, e) => s + e.price, 0);
+    ? EXTENSION_LIST
+    : EXTENSION_LIST.filter((e) => selectedExts.includes(e.id));
+  const amount = fullKitActive ? FULL_KIT_PRICE : baseProduct.price + EXTENSION_LIST.filter((e) => selectedExts.includes(e.id)).reduce((s, e) => s + e.price, 0);
   const planName = fullKitActive ? "Full Kit — All 10 Extensions" : "CyberShield Rootkit";
 
   const handleSend = async () => {
@@ -147,11 +135,11 @@ export default function AdminPage() {
             <div className="grid grid-cols-2 gap-2">
               {!fullKitActive && (
                 <div className="col-span-2 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm text-orange-700">
-                  <span className="block font-medium">CyberShield Rootkit</span>
-                  <span className="text-xs opacity-70">$999 — always included</span>
+                  <span className="block font-medium">{baseProduct.name}</span>
+                  <span className="text-xs opacity-70">${baseProduct.price} — always included</span>
                 </div>
               )}
-              {[{ id: FULL_KIT_ID, name: "Full Kit", price: FULL_KIT_PRICE }, ...extensions].map((ext) => {
+              {[{ id: FULL_KIT_ID, name: "Full Kit", price: FULL_KIT_PRICE }, ...EXTENSION_LIST].map((ext) => {
                 const active = selectedExts.includes(ext.id);
                 const disabled = ext.id !== FULL_KIT_ID && fullKitActive;
                 return (
