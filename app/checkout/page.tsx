@@ -25,20 +25,6 @@ const FULL_KIT_ID = "full-kit";
 const USDT_WALLET = "0xEB84a0e913393E6AcE713f3ecC660dEFCa8886d1";
 const PAYMENT_DURATION = 30 * 60;
 
-async function sendConfirmationEmail({ email, name, plan, amount, serverDomain, cpanelUser, extensions }: {
-  email: string; name: string; plan: string; amount: number; serverDomain: string; cpanelUser: string; extensions: { name: string; price: number }[];
-}) {
-  try {
-    await fetch("/api/send-confirmation", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, name, plan, amount, serverDomain, cpanelUser, extensions }),
-    });
-  } catch (err) {
-    console.error("Failed to send confirmation email", err);
-  }
-}
-
 type CheckoutDraft = {
   name?: string;
   email?: string;
@@ -815,21 +801,7 @@ function CheckoutForm() {
           <PaymentModal
             total={totalWithFee}
             onClose={() => setShowPaymentModal(false)}
-            onConfirmed={async () => {
-              const planName = fullKitActive ? "Full Kit — All 10 Extensions" : `${baseProduct.name}`;
-              await sendConfirmationEmail({
-                email,
-                name,
-                plan: planName,
-                amount: totalWithFee,
-                serverDomain,
-                cpanelUser,
-                extensions: fullKitActive
-                  ? extensions.filter((e) => e.id !== FULL_KIT_ID)
-                  : extensions.filter((e) => selected.has(e.id)),
-              });
-              setSubmitted(true);
-            }}
+            onConfirmed={() => setSubmitted(true)}
           />
         )}
       </AnimatePresence>
