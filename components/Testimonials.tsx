@@ -6,7 +6,7 @@ import { StarIcon } from "./ui/Icons";
 const testimonials = [
   {
     quote:
-      "CyberShield cut our security overhead by more than half. Our team now spends more time shipping features than managing server vulnerabilities.",
+      "The checkout was clear, the handoff was structured, and we knew exactly what the team needed before touching our production VPS.",
     author: "Shon Taite",
     role: "Head of Security",
     company: "Grainor",
@@ -15,7 +15,7 @@ const testimonials = [
   },
   {
     quote:
-      "The AI-powered threat detection caught a zero-day exploit that our previous solution completely missed. Worth every penny.",
+      "Cyref Pro helped us turn scattered firewall and malware tasks into one practical deployment plan. The trust score section was what got finance comfortable.",
     author: "Sarah Chen",
     role: "Engineering Lead",
     company: "CloudScale",
@@ -24,7 +24,7 @@ const testimonials = [
   },
   {
     quote:
-      "We evaluated every VPS security solution on the market. CyberShield's 3-minute setup and AI-driven protection made the decision easy.",
+      "We needed cPanel-aware security without a giant enterprise platform. The extension model let us start lean and add only what mattered.",
     author: "Mark Demon",
     role: "CTO",
     company: "RevBoost",
@@ -33,7 +33,7 @@ const testimonials = [
   },
   {
     quote:
-      "PCI compliance used to take us weeks. With CyberShield's one-click hardening, we now pass audits in under an hour.",
+      "The reporting and support notes gave us a cleaner audit trail. It felt like a real security handoff, not just a download link.",
     author: "Jessica Park",
     role: "Security Director",
     company: "FinSecure",
@@ -57,16 +57,12 @@ function TestimonialCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`group relative rounded-2xl border bg-white p-8 transition-all duration-300 ${
+      className={`group relative rounded-lg border bg-white p-8 transition-all duration-300 ${
         featured
           ? "border-orange-200 shadow-lg shadow-orange-500/5 md:col-span-2 md:row-span-1"
           : "border-slate-200 shadow-sm hover:shadow-lg hover:border-orange-200"
       }`}
     >
-      {featured && (
-        <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
-      )}
-
       <div className="flex gap-1 mb-5">
         {Array.from({ length: testimonial.rating }).map((_, i) => (
           <StarIcon key={i} className="w-4 h-4 fill-orange-400 text-orange-400" />
@@ -77,7 +73,7 @@ function TestimonialCard({
         &ldquo;{testimonial.quote}&rdquo;
       </blockquote>
 
-      <div className="mt-6 pt-5 border-t border-slate-100 flex items-center gap-4">
+      <div className="mt-6 pt-5 border-t border-slate-200 flex items-center gap-4">
         <img
           src={testimonial.avatar}
           alt={testimonial.author}
@@ -113,7 +109,6 @@ export function Testimonials() {
   return (
     <section className="relative bg-white py-28 overflow-hidden">
       <div className="absolute inset-0 bg-dot-pattern pointer-events-none opacity-30" />
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-orange-500/4 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <div className="mx-auto max-w-3xl text-center mb-16">
@@ -123,7 +118,7 @@ export function Testimonials() {
             viewport={{ once: true }}
             className="text-sm font-bold tracking-[0.2em] uppercase text-orange-500 mb-4 font-heading"
           >
-            Trusted by Security Teams
+            Customer Confidence
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -131,15 +126,14 @@ export function Testimonials() {
             viewport={{ once: true }}
             className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 font-heading"
           >
-            Trusted by{" "}
+            Trusted by operators who need{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
-              2,500+
+              proof before purchase
             </span>{" "}
-            companies worldwide
           </motion.h2>
         </div>
 
-        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t, i) => (
             <TestimonialCard
               key={t.author}

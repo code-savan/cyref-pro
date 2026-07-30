@@ -1,44 +1,86 @@
 import { useState, useMemo } from 'react';
 
-export type Websites = 1 | 5 | 25;
-export type LogRetention = '30days' | '90days' | '1year';
-export type AiResponse = 'automated' | 'manual';
+export type Extension = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+};
+
+export const baseProduct = {
+  id: 'rootkit',
+  name: 'CyberShield Rootkit',
+  description: 'Core AI-driven rootkit detection & prevention engine',
+  price: 999,
+};
+
+export const extensions: Extension[] = [
+  { id: 'threat-intel', name: 'AI Threat Intelligence', description: 'Real-time global threat feed integration', price: 600 },
+  { id: 'ddos', name: 'DDoS Protection', description: 'Guided DDoS protection setup and traffic hardening', price: 499 },
+  { id: 'email-smtp', name: 'Email SMTP Protection', description: 'Outbound SMTP filtering & phishing detection', price: 350 },
+  { id: 'malware', name: 'Malware Scanner Pro', description: 'Deep file-system malware analysis', price: 400 },
+  { id: 'waf', name: 'Web Application Firewall', description: 'OWASP top-10 rule engine with custom rules', price: 550 },
+  { id: 'file-monitor', name: 'Real-Time File Monitor', description: 'Inotify-based integrity checking', price: 350 },
+  { id: 'database', name: 'Database Security Suite', description: 'Encryption, audit, and SQLi prevention', price: 500 },
+  { id: 'siem', name: 'SIEM & Log Management', description: 'Centralized log aggregation & alerting', price: 750 },
+  { id: 'vuln-scanner', name: 'Vulnerability Scanner', description: 'Weekly CVE-based infrastructure scans', price: 300 },
+  { id: 'compliance', name: 'Compliance Reports', description: 'PCI-DSS / HIPAA / SOC2 report generation', price: 250 },
+  { id: 'full-kit', name: 'Full Kit', description: 'All 10 extensions bundled into one discounted security stack', price: 1999 },
+];
+
+const FULL_KIT_PRICE = 1999;
 
 export function usePricing() {
-  const [websites, setWebsites] = useState<Websites>(1);
-  const [logRetention, setLogRetention] = useState<LogRetention>('30days');
-  const [aiResponse, setAiResponse] = useState<AiResponse>('automated');
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
-  const basePrice = 400; // Requirement says License: $400, but logic says base 800? 
-  // Wait, requirement says: basePrice = 800. Let's stick to the technical requirement:
-  const actualBasePrice = 800;
-  
-  const websitePrices = { 1: 0, 5: 300, 25: 800 };
-  const logPrices = { '30days': 0, '90days': 200, '1year': 500 };
-  const aiPrices = { automated: 0, manual: 400 };
+  const toggle = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
 
-  const total = useMemo(() => {
-    return (
-      actualBasePrice +
-      websitePrices[websites] +
-      logPrices[logRetention] +
-      aiPrices[aiResponse]
-    );
-  }, [websites, logRetention, aiResponse]);
+      if (id === 'full-kit') {
+        if (next.has('full-kit')) {
+          next.delete('full-kit');
+        } else {
+          next.clear();
+          next.add('full-kit');
+        }
+      } else if (next.has('full-kit')) {
+        next.delete('full-kit');
+        next.add(id);
+      } else {
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+      }
+
+      return next;
+    });
+  };
+
+  const isFullKit = selected.has('full-kit');
+  const showBase = !isFullKit;
+
+  const selectedExtensions = useMemo(
+    () => extensions.filter((e) => selected.has(e.id) && e.id !== 'full-kit'),
+    [selected]
+  );
+
+  const extensionsTotal = useMemo(
+    () => selectedExtensions.reduce((sum, e) => sum + e.price, 0),
+    [selectedExtensions]
+  );
+
+  const total = isFullKit ? FULL_KIT_PRICE : baseProduct.price + extensionsTotal;
 
   return {
-    websites,
-    setWebsites,
-    logRetention,
-    setLogRetention,
-    aiResponse,
-    setAiResponse,
+    selected,
+    toggle,
+    isFullKit,
+    showBase,
     total,
     breakdown: {
-      base: actualBasePrice,
-      websites: websitePrices[websites],
-      logs: logPrices[logRetention],
-      ai: aiPrices[aiResponse],
-    }
+      base: isFullKit ? 0 : baseProduct.price,
+      extensions: selectedExtensions,
+      extensionsTotal: isFullKit ? 0 : extensionsTotal,
+    },
   };
 }

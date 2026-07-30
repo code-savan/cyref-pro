@@ -1,32 +1,79 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { useRef } from "react";
 import { ShieldCheckIcon, LockIcon, ZapIcon } from "./ui/Icons";
 
 const steps = [
   {
     id: "01",
-    name: "Buy & Download Plugin",
+    name: "Choose your stack",
     description:
-      "Purchase your license and download the lightweight CyberShield plugin.",
+      "Select the core package, add extensions, and review the exact checkout total.",
     icon: LockIcon,
   },
   {
     id: "02",
-    name: "Upload via cPanel / WHM",
+    name: "Complete secure checkout",
     description:
-      "Simply upload the plugin through your existing hosting control panel.",
+      "Send the exact USDT amount shown, then keep the order details for review.",
     icon: ZapIcon,
   },
   {
     id: "03",
-    name: "Activate AI Scan",
+    name: "Receive deployment handoff",
     description:
-      "One click to activate. The AI immediately begins scanning and securing your server.",
+      "The team confirms the order and sends setup instructions to your email.",
     icon: ShieldCheckIcon,
   },
 ];
+
+function StepCard({
+  step,
+  index,
+  progress,
+}: {
+  step: typeof steps[number];
+  index: number;
+  progress: MotionValue<number>;
+}) {
+  const stepProgress = useTransform(
+    progress,
+    [Math.max(0, (index - 0.5) / 2), index / 2],
+    [0, 1]
+  );
+  const scale = useTransform(stepProgress, [0, 1], [0.85, 1]);
+  const opacity = useTransform(stepProgress, [0, 1], [0.4, 1]);
+  const color = useTransform(
+    stepProgress,
+    [0, 1],
+    ["#94A3B8", "#F97316"]
+  );
+
+  return (
+    <div className="relative z-10 flex flex-col items-center text-center">
+      <motion.div
+        style={{ scale, opacity }}
+        className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white border-2 border-slate-200 shadow-lg"
+      >
+        <motion.div style={{ color }}>
+          <step.icon className="h-8 w-8 relative z-10" />
+        </motion.div>
+      </motion.div>
+
+      <div className="mt-6">
+        <span className="text-xs font-bold tracking-[0.15em] uppercase text-orange-500">
+          Step {step.id}
+        </span>
+        <h3 className="mt-2 text-xl font-bold text-slate-900 font-heading">{step.name}</h3>
+        <p className="mt-2 text-sm text-slate-500 leading-relaxed max-w-xs">
+          {step.description}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export function HowItWorks() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,7 +100,7 @@ export function HowItWorks() {
             viewport={{ once: true }}
             className="text-sm font-bold tracking-[0.2em] uppercase text-orange-500 mb-4 font-heading"
           >
-            Simple Setup
+            Purchase Flow
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -61,7 +108,7 @@ export function HowItWorks() {
             viewport={{ once: true }}
             className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 font-heading"
           >
-            Secure in 3 Simple Steps
+            From checkout to protected server
           </motion.h2>
         </div>
 
@@ -78,50 +125,9 @@ export function HowItWorks() {
               </svg>
             </div>
 
-            {steps.map((step, index) => {
-              const stepProgress = useTransform(
-                smoothProgress,
-                [Math.max(0, (index - 0.5) / 2), index / 2],
-                [0, 1]
-              );
-              const scale = useTransform(stepProgress, [0, 1], [0.85, 1]);
-              const opacity = useTransform(stepProgress, [0, 1], [0.4, 1]);
-
-              return (
-                <div key={step.id} className="relative flex flex-col items-center text-center z-10">
-                  <motion.div
-                    style={{ scale, opacity }}
-                    className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white border-2 border-slate-200 shadow-lg"
-                  >
-                    <motion.div
-                      className="absolute inset-0 rounded-full bg-orange-500/15 blur-lg"
-                      style={{ opacity: useTransform(stepProgress, [0, 1], [0, 0.6]) }}
-                    />
-                    <motion.div
-                      style={{
-                        color: useTransform(
-                          stepProgress,
-                          [0, 1],
-                          ["#94A3B8" as string, "#F97316" as string]
-                        ),
-                      }}
-                    >
-                      <step.icon className="h-8 w-8 relative z-10" />
-                    </motion.div>
-                  </motion.div>
-
-                  <div className="mt-6">
-                    <span className="text-xs font-bold tracking-[0.15em] uppercase text-orange-500">
-                      Step {step.id}
-                    </span>
-                    <h3 className="mt-2 text-xl font-bold text-slate-900 font-heading">{step.name}</h3>
-                    <p className="mt-2 text-sm text-slate-500 leading-relaxed max-w-xs">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+            {steps.map((step, index) => (
+              <StepCard key={step.id} step={step} index={index} progress={smoothProgress} />
+            ))}
           </div>
         </div>
       </div>

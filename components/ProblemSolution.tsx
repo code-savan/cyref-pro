@@ -4,24 +4,24 @@ import { XCircleIcon, CheckCircleIcon } from "./ui/Icons";
 import { motion } from "framer-motion";
 
 const problems = [
-  "Vulnerable default setups exposed to bots",
-  "Zero protection against zero-day exploits",
-  "Manual patching and constant maintenance",
-  "Reactive, panic-driven incident response",
-  "Complex, error-prone configuration",
+  "Default cPanel settings left exposed to automated scans",
+  "Firewall rules scattered across plugins and hosting tools",
+  "Malware checks that only run after something feels wrong",
+  "Unclear ownership when an incident needs fast action",
+  "Checkout flows that do not explain what happens after payment",
 ];
 
 const solutions = [
-  "Instant, military-grade server hardening",
-  "Real-time AI zero-day threat blocking",
-  "Fully automated, hands-off security updates",
-  "Proactive defense before attacks hit",
-  "One-click, pain-free PCI compliance",
+  "Guided hardening built around VPS and cPanel workflows",
+  "Layered firewall, scan, and file-monitoring options",
+  "Clear deployment notes delivered after order review",
+  "Specialist support for urgent setup and incident questions",
+  "Transparent pricing, exact payment totals, and trust badges",
 ];
 
 export function ProblemSolution() {
   return (
-    <section className="relative py-28 bg-slate-50 overflow-hidden">
+    <section className="relative py-28 bg-white overflow-hidden">
       <div className="absolute inset-0 bg-grid-pattern-light pointer-events-none opacity-40" />
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
@@ -40,22 +40,22 @@ export function ProblemSolution() {
             viewport={{ once: true }}
             className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 font-heading"
           >
-            The Difference is{" "}
+            Security that feels{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
-              Night and Day
+              calm and clear
             </span>
           </motion.h2>
         </div>
 
         <div className="flex flex-col lg:flex-row items-stretch justify-center gap-8 max-w-6xl mx-auto">
           <div className="w-full lg:w-1/2">
-            <div className="h-full rounded-2xl border border-slate-200 bg-white p-8 lg:p-10 shadow-sm">
+            <div className="h-full rounded-lg border border-slate-200 bg-white p-8 lg:p-10">
               <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-200">
-                <div className="p-2.5 rounded-xl bg-red-50 text-red-500">
+                <div className="p-2.5 rounded-lg bg-red-50 text-red-500">
                   <XCircleIcon className="h-7 w-7" />
                 </div>
                 <h3 className="text-2xl font-bold text-slate-800 tracking-tight font-heading">
-                  Without CyberShield
+                  Without Cyref Pro
                 </h3>
               </div>
               <ul className="space-y-5">
@@ -77,14 +77,13 @@ export function ProblemSolution() {
           </div>
 
           <div className="w-full lg:w-1/2">
-            <div className="h-full rounded-2xl border border-orange-200 bg-white p-8 lg:p-10 shadow-lg shadow-orange-500/5 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="h-full rounded-lg border border-orange-300 bg-white p-8 lg:p-10 shadow-lg shadow-orange-500/5 relative overflow-hidden">
               <div className="flex items-center gap-4 mb-8 pb-6 border-b border-orange-100">
-                <div className="p-2.5 rounded-xl bg-orange-50 text-orange-500">
+                <div className="p-2.5 rounded-lg bg-orange-50 text-orange-500">
                   <CheckCircleIcon className="h-7 w-7" />
                 </div>
                 <h3 className="text-2xl font-bold text-slate-900 tracking-tight font-heading">
-                  With CyberShield
+                  With Cyref Pro
                 </h3>
               </div>
               <ul className="space-y-5">

@@ -6,34 +6,34 @@ import { ChevronDownIcon } from "./ui/Icons";
 
 const faqs = [
   {
-    question: "Is my data safe on CyberShield?",
+    question: "What makes the checkout trustworthy?",
     answer:
-      "Yes. We use industry-grade AES-256 encryption, secure servers, and role-based access controls to protect your data at all times. All traffic is monitored through our AI-powered threat detection system.",
+      "The checkout shows the exact service selection, processing fee, total due, payment network, support contact, and post-payment handoff before you send funds.",
   },
   {
-    question: "How do I get started?",
+    question: "How does deployment start after payment?",
     answer:
-      "Purchase your license, download the plugin, upload via cPanel/WHM, and activate the AI scan. The entire process takes under 3 minutes with zero technical expertise required.",
+      "After payment review, the Cyref Pro team uses your order details to prepare the deployment handoff and contact you at the email address provided during checkout.",
   },
   {
     question: "Does it work with my existing setup?",
     answer:
-      "CyberShield is built specifically for Namecheap VPS and standard cPanel servers. It integrates seamlessly with your existing hosting environment without conflicts or complicated configuration.",
+      "Cyref Pro is designed around Namecheap VPS and standard cPanel/WHM environments. If your setup is different, contact support before purchase so the team can confirm fit.",
   },
   {
-    question: "Can I customize the security rules?",
+    question: "Can I customize the protection stack?",
     answer:
-      "Yes. Our configurable pricing lets you tailor protection to your exact needs. You can adjust website capacity, log retention periods, and choose between automated or manual AI threat response.",
+      "Yes. Start with the core CyberShield Rootkit package and add extensions such as WAF, SIEM, malware scanning, file monitoring, SMTP protection, or the discounted Full Kit.",
   },
   {
     question: "What kind of support do you offer?",
     answer:
-      "We provide 24/7 emergency support from our specialized security team. All plans include email support, with priority response times for critical security incidents.",
+      "Checkout and deployment support are available through the listed support email, with priority attention for urgent setup or security incident questions.",
   },
   {
-    question: "Is there a free trial available?",
+    question: "Are the prices transparent?",
     answer:
-      "Yes, we offer a 14-day free trial with full access to all features. No credit card required. You can experience the full power of AI-driven security before making a commitment.",
+      "Yes. The configurator and checkout both show the base package, selected extensions, processing fee, total due today, and the Full Kit savings when applicable.",
   },
 ];
 
@@ -43,7 +43,6 @@ export function FAQ() {
   return (
     <section className="relative bg-white py-28 overflow-hidden">
       <div className="absolute inset-0 bg-dot-pattern pointer-events-none opacity-30" />
-      <div className="absolute right-0 top-0 w-[500px] h-[500px] bg-orange-500/4 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <div className="mx-auto max-w-3xl text-center mb-16">
@@ -53,7 +52,7 @@ export function FAQ() {
             viewport={{ once: true }}
             className="text-sm font-bold tracking-[0.2em] uppercase text-orange-500 mb-4 font-heading"
           >
-            Got Questions?
+            Buyer FAQ
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -61,7 +60,7 @@ export function FAQ() {
             viewport={{ once: true }}
             className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 font-heading"
           >
-            Frequently Asked Questions
+            Everything to know before checkout
           </motion.h2>
         </div>
 

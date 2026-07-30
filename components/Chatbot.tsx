@@ -12,7 +12,7 @@ type Message = {
 const quickReplies = [
   "How do I get started?",
   "What threats do you block?",
-  "Is there a free trial?",
+  "Can I review before payment?",
   "How long does setup take?",
   "Pricing & plans",
 ];
@@ -23,13 +23,13 @@ const botResponses: Record<string, string> = {
   "How do I get started?":
     "Getting started is easy! Purchase your license, download the plugin, upload via cPanel/WHM, and activate the AI scan. The entire process takes under 3 minutes. Would you like me to walk you through any specific step?",
   "What threats do you block?":
-    "CyberShield blocks zero-day exploits, phishing attempts, malware, DDoS attacks, and unauthorized access attempts in real-time. Our AI analyzes traffic patterns to catch threats before they reach your server.",
-  "Is there a free trial?":
-    "Yes! We offer a 14-day free trial with full access to all features. No credit card required. You'll experience AI-driven protection immediately with no commitment.",
+    "Cyref Pro blocks zero-day exploits, phishing attempts, malware, DDoS attacks, and unauthorized access attempts in real-time. Our AI analyzes traffic patterns to catch threats before they reach your server.",
+  "Can I review before payment?":
+    "Cyref Pro is sold through transparent annual packages. You can review the full stack, payment total, and deployment handoff before sending payment.",
   "How long does setup take?":
-    "Setup takes under 3 minutes. Just upload the plugin through cPanel/WHM and activate—our AI immediately begins scanning and securing your server.",
+    "Most orders receive a deployment handoff after payment review. The exact setup depends on your VPS, cPanel/WHM access, and selected extensions.",
   "Pricing & plans":
-    "Our pricing is fully configurable based on your needs. The base license is $800/year, with options for additional websites, log retention, and AI response mode. Use our pricing configurator to find your perfect plan!",
+    "Pricing starts with CyberShield Rootkit at $999/year, then you can add extensions or choose the discounted Full Kit. The checkout shows the processing fee and total before payment.",
 };
 
 function ChatMessage({ msg }: { msg: Message }) {
@@ -78,11 +78,13 @@ export function Chatbot() {
     setInput("");
     setIsTyping(true);
 
+    const responseDelay = 800 + (text.length % 6) * 80;
+
     setTimeout(() => {
       const reply = botResponses[text] || botResponses.default;
       setMessages((prev) => [...prev, { role: "bot", text: reply }]);
       setIsTyping(false);
-    }, 800 + Math.random() * 600);
+    }, responseDelay);
   };
 
   return (

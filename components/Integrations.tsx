@@ -15,7 +15,7 @@ const integrations = [
 
 export function Integrations() {
   return (
-    <section className="relative bg-slate-50 py-24 overflow-hidden">
+    <section className="relative bg-slate-50 py-24 overflow-hidden" id="integrations">
       <div className="absolute inset-0 bg-grid-pattern-light pointer-events-none opacity-40" />
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <div className="mx-auto max-w-5xl">
