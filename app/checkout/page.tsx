@@ -8,6 +8,7 @@ import { baseProduct, extensions } from "@/hooks/usePricing";
 import {
   ActivityIcon,
   ArrowRightIcon,
+  ClockIcon,
   CheckCircleIcon,
   CheckIcon,
   CopyIcon,
@@ -150,11 +151,28 @@ function PaymentModal({ total, onClose, onConfirmed }: { total: number; onClose:
   const [confirming, setConfirming] = useState(false);
   const [timeLeft, setTimeLeft] = useState(PAYMENT_DURATION);
   const [copied, setCopied] = useState(false);
+  const [paymentEnabled, setPaymentEnabled] = useState(false);
+  const [paymentCountdown, setPaymentCountdown] = useState(15);
 
   useEffect(() => {
     const readyTimer = setTimeout(() => setReady(true), 2000);
     return () => clearTimeout(readyTimer);
   }, []);
+
+  useEffect(() => {
+    if (paymentEnabled) return;
+    const t = setInterval(() => {
+      setPaymentCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(t);
+          setPaymentEnabled(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(t);
+  }, [paymentEnabled]);
 
   useEffect(() => {
     if (!ready) return;
@@ -270,11 +288,11 @@ function PaymentModal({ total, onClose, onConfirmed }: { total: number; onClose:
 
                 <button
                   onClick={() => {
-                    if (confirming) return;
+                    if (confirming || !paymentEnabled) return;
                     setConfirming(true);
                     setTimeout(() => onConfirmed(), 5000);
                   }}
-                  disabled={confirming}
+                  disabled={confirming || !paymentEnabled}
                   className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-6 text-sm font-bold text-white transition hover:bg-slate-800 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {confirming ? (
@@ -282,10 +300,15 @@ function PaymentModal({ total, onClose, onConfirmed }: { total: number; onClose:
                       <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
                       Processing...
                     </>
-                  ) : (
+                  ) : paymentEnabled ? (
                     <>
                       I sent the payment
                       <ArrowRightIcon className="h-4 w-4" />
+                    </>
+                  ) : (
+                    <>
+                      <ClockIcon className="h-4 w-4" />
+                      Wait {paymentCountdown}s
                     </>
                   )}
                 </button>
