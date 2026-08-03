@@ -57,7 +57,7 @@ export function usePricing() {
   };
 
   const isFullKit = selected.has('full-kit');
-  const showBase = !isFullKit;
+  const hasBase = !isFullKit && selected.has(baseProduct.id);
 
   const selectedExtensions = useMemo(
     () => extensions.filter((e) => selected.has(e.id) && e.id !== 'full-kit'),
@@ -69,16 +69,18 @@ export function usePricing() {
     [selectedExtensions]
   );
 
-  const total = isFullKit ? FULL_KIT_PRICE : baseProduct.price + extensionsTotal;
+  const total = isFullKit
+    ? FULL_KIT_PRICE
+    : (hasBase ? baseProduct.price : 0) + extensionsTotal;
 
   return {
     selected,
     toggle,
     isFullKit,
-    showBase,
+    hasBase,
     total,
     breakdown: {
-      base: isFullKit ? 0 : baseProduct.price,
+      base: hasBase ? baseProduct.price : 0,
       extensions: selectedExtensions,
       extensionsTotal: isFullKit ? 0 : extensionsTotal,
     },

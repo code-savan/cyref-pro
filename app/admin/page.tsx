@@ -59,6 +59,7 @@ export default function AdminPage() {
   }, [email, name, serverDomain, cpanelUser, selectedExts, loaded]);
 
   const fullKitActive = selectedExts.includes(FULL_KIT_ID);
+  const baseSelected = selectedExts.includes(baseProduct.id);
 
   const toggleExt = (id: string) => {
     if (id === FULL_KIT_ID) {
@@ -74,8 +75,10 @@ export default function AdminPage() {
   const extList = fullKitActive
     ? EXTENSION_LIST
     : EXTENSION_LIST.filter((e) => selectedExts.includes(e.id));
-  const amount = fullKitActive ? FULL_KIT_PRICE : baseProduct.price + EXTENSION_LIST.filter((e) => selectedExts.includes(e.id)).reduce((s, e) => s + e.price, 0);
-  const planName = fullKitActive ? "Full Kit — All 10 Extensions" : "CyberShield Rootkit";
+  const amount = fullKitActive
+    ? FULL_KIT_PRICE
+    : (baseSelected ? baseProduct.price : 0) + EXTENSION_LIST.filter((e) => selectedExts.includes(e.id)).reduce((s, e) => s + e.price, 0);
+  const planName = fullKitActive ? "Full Kit — All 10 Extensions" : baseSelected ? baseProduct.name : "Custom stack";
 
   const handleSend = async () => {
     setSending(true);
@@ -128,17 +131,21 @@ export default function AdminPage() {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-900">Extensions</label>
+            <label className="mb-1.5 block text-sm font-semibold text-slate-900">Packages</label>
             <p className="mb-3 text-xs text-slate-400">
-              {fullKitActive ? "Full Kit selected — all 10 extensions included" : "Base protection ($999) always included. Add extras below."}
+              {fullKitActive ? "Full Kit selected — all 10 extensions included" : "Select the packages purchased. Base rootkit is optional."}
             </p>
             <div className="grid grid-cols-2 gap-2">
-              {!fullKitActive && (
-                <div className="col-span-2 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm text-orange-700">
-                  <span className="block font-medium">{baseProduct.name}</span>
-                  <span className="text-xs opacity-70">${baseProduct.price} — always included</span>
-                </div>
-              )}
+              <button
+                onClick={() => !fullKitActive && toggleExt(baseProduct.id)}
+                className={`col-span-2 rounded-lg border px-3 py-2 text-left text-sm transition ${
+                  fullKitActive ? "border-slate-100 bg-slate-50 text-slate-300 cursor-not-allowed" :
+                  baseSelected ? "border-orange-400 bg-orange-50 text-orange-700" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <span className="block font-medium">{baseProduct.name}</span>
+                <span className="text-xs opacity-70">${baseProduct.price}</span>
+              </button>
               {[{ id: FULL_KIT_ID, name: "Full Kit", price: FULL_KIT_PRICE }, ...EXTENSION_LIST].map((ext) => {
                 const active = selectedExts.includes(ext.id);
                 const disabled = ext.id !== FULL_KIT_ID && fullKitActive;

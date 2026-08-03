@@ -361,13 +361,15 @@ function CheckoutForm() {
 
   const selectedExtensions = useMemo(() => extensions.filter((extension) => selected.has(extension.id)), [selected]);
   const visibleSummaryExtensions = fullKitActive ? extensions.filter((extension) => extension.id !== FULL_KIT_ID) : selectedExtensions;
+  const basesSelected = selected.has(baseProduct.id);
 
   const total = useMemo(
     () =>
       fullKitActive
         ? 1999
-        : baseProduct.price + extensions.filter((extension) => selected.has(extension.id)).reduce((sum, extension) => sum + extension.price, 0),
-    [fullKitActive, selected]
+        : (basesSelected ? baseProduct.price : 0) +
+          extensions.filter((extension) => selected.has(extension.id)).reduce((sum, extension) => sum + extension.price, 0),
+    [fullKitActive, basesSelected, selected]
   );
 
   const fee = useMemo(() => Math.round(total * FEE_RATE), [total]);
@@ -384,10 +386,10 @@ function CheckoutForm() {
 
   if (submitted) {
     const receiptId = `CYREF-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-    const planName = fullKitActive ? "Full Kit — All 10 Extensions" : baseProduct.name;
+    const planName = fullKitActive ? "Full Kit — All 10 Extensions" : selected.has(baseProduct.id) ? baseProduct.name : selectedExtensions.map((e) => e.name).join(", ") || "Custom stack";
     const extNames = fullKitActive
       ? extensions.filter((e) => e.id !== FULL_KIT_ID).map((e) => e.name)
-      : selectedExtensions.map((e) => e.name);
+      : (selected.has(baseProduct.id) ? [baseProduct.name] : []).concat(selectedExtensions.map((e) => e.name));
 
     return (
       <div className="relative min-h-screen bg-white overflow-hidden">
@@ -554,12 +556,21 @@ function CheckoutForm() {
 
             <CheckoutSection
               title="Services"
-              action={<span className="text-sm font-semibold text-slate-500">{fullKitActive ? "Full Kit selected" : `${selectedExtensions.length} add-ons selected`}</span>}
+              action={
+                <span className="text-sm font-semibold text-slate-500">
+                  {fullKitActive ? "Full Kit selected" : `${selected.size + (basesSelected ? 1 : 0)} package${selected.size + (basesSelected ? 1 : 0) !== 1 ? "s" : ""} selected`}
+                </span>
+              }
             >
               <div className="rounded-lg border border-slate-200">
-                <div className="flex items-start justify-between gap-4 border-b border-slate-200 p-4">
+                <button
+                  onClick={() => !fullKitActive && toggle(baseProduct.id)}
+                  className={`flex w-full items-start justify-between gap-4 border-b border-slate-200 p-4 text-left transition ${
+                    fullKitActive ? "bg-slate-50 opacity-45" : basesSelected ? "bg-orange-50" : "bg-white hover:bg-slate-50"
+                  }`}
+                >
                   <div className="flex gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-md bg-orange-50 text-orange-600">
+                    <span className={`flex h-10 w-10 items-center justify-center rounded-md ${basesSelected && !fullKitActive ? "bg-orange-500 text-white" : "bg-slate-100 text-slate-500"}`}>
                       <ShieldCheckIcon className="h-5 w-5" />
                     </span>
                     <div>
@@ -567,8 +578,13 @@ function CheckoutForm() {
                       <p className="mt-1 text-sm text-slate-500">{baseProduct.description}</p>
                     </div>
                   </div>
-                  <p className="shrink-0 font-bold text-slate-950">${baseProduct.price}</p>
-                </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    <p className="font-bold text-slate-950">${baseProduct.price}</p>
+                    <span className={`flex h-5 w-5 items-center justify-center rounded-full ${basesSelected && !fullKitActive ? "bg-orange-500 text-white" : "border border-slate-300 text-transparent"}`}>
+                      <CheckIcon className="h-3 w-3" />
+                    </span>
+                  </div>
+                </button>
 
                 <button
                   onClick={() => toggle(FULL_KIT_ID)}
@@ -702,15 +718,17 @@ function CheckoutForm() {
                     </div>
                   ) : (
                     <>
-                      <div className="border-l-4 border-orange-300 pl-4">
-                        <div className="flex justify-between gap-4">
-                          <p className="font-semibold text-slate-950">{baseProduct.name}</p>
-                          <p className="font-bold text-slate-950">${baseProduct.price}</p>
+                      {basesSelected && (
+                        <div className="border-l-4 border-orange-300 pl-4">
+                          <div className="flex justify-between gap-4">
+                            <p className="font-semibold text-slate-950">{baseProduct.name}</p>
+                            <p className="font-bold text-slate-950">${baseProduct.price}</p>
+                          </div>
+                          <p className="mt-1 text-sm text-slate-500">Core package</p>
                         </div>
-                        <p className="mt-1 text-sm text-slate-500">Core package</p>
-                      </div>
-                      {visibleSummaryExtensions.length === 0 ? (
-                        <p className="text-sm text-slate-400">No optional add-ons selected.</p>
+                      )}
+                      {visibleSummaryExtensions.length === 0 && !basesSelected ? (
+                        <p className="text-sm text-slate-400">No packages selected.</p>
                       ) : (
                         visibleSummaryExtensions.map((extension) => (
                           <div key={extension.id} className="border-l-4 border-orange-200 pl-4">

@@ -29,6 +29,7 @@ const iconPaths: Record<string, string[]> = {
   "vuln-scanner": ["M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z", "M12 6v6", "M12 16h.01"],
   compliance: ["M9 12l2 2 4-4M7.86 2h8.28L22 5.86v8.28L16.14 20H7.86L2 14.14V5.86L7.86 2z"],
   "full-kit": ["M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z", "M12 8v4", "M12 16h.01", "M9 12l2 2 4-4"],
+  rootkit: ["M12 3c-4 2-8 3-8 3v6c0 5 8 9 8 9s8-4 8-9V6s-4-1-8-3Z", "m9 12 2 2 4-4"],
 };
 
 function ExtIcon({ id }: { id: string }) {
@@ -113,7 +114,7 @@ function PricingCard({ ext, selected, onToggle, bestValue }: { ext: Extension; s
 
 export function PricingConfigurator() {
   const router = useRouter();
-  const { selected, toggle, total, isFullKit, showBase } = usePricing();
+  const { selected, toggle, total, isFullKit, hasBase } = usePricing();
   const count = selected.size;
   const pricingRef = useRef<HTMLElement>(null);
   const [showPricingBar, setShowPricingBar] = useState(false);
@@ -163,38 +164,24 @@ export function PricingConfigurator() {
             transition={{ delay: 0.1 }}
             className="mt-4 text-lg text-slate-500 max-w-2xl mx-auto"
           >
-            Start with CyberShield Rootkit, add the protection layers you need, and review the exact total before checkout.
+            Choose the packages you need or grab the Full Kit for everything, then review the exact total before checkout.
           </motion.p>
         </div>
 
         <div className="mx-auto max-w-5xl">
-          {/* Base product */}
-          {showBase && (
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative rounded-lg border border-orange-300 bg-orange-50 p-6 mb-8 flex items-center gap-5"
-            >
-              <div className="absolute -top-2.5 left-6 px-3 py-0.5 bg-orange-500 rounded-md">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-white">Required</span>
-              </div>
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-orange-500 text-white shadow-lg shadow-orange-500/20">
-                <ShieldCheckIcon className="h-7 w-7" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-lg font-bold text-slate-900">{baseProduct.name}</p>
-                <p className="text-sm text-slate-500 mt-0.5">{baseProduct.description}</p>
-              </div>
-              <div className="text-right shrink-0">
-                <p className="text-2xl font-extrabold text-slate-900">${baseProduct.price}</p>
-                <p className="text-xs text-slate-400">/year</p>
-              </div>
-            </motion.div>
-          )}
-
           {/* Extensions grid */}
           <div className="grid sm:grid-cols-2 gap-3">
+            {!isFullKit && (
+              <motion.div
+                key={baseProduct.id}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="sm:col-span-2"
+              >
+                <PricingCard ext={baseProduct} selected={hasBase} onToggle={() => toggle(baseProduct.id)} />
+              </motion.div>
+            )}
             {extensions.map((ext, i) => (
               <motion.div
                 key={ext.id}
@@ -227,7 +214,7 @@ export function PricingConfigurator() {
                 <div className="hidden sm:flex items-center gap-2">
                   <ShieldCheckIcon className="h-5 w-5 text-orange-500" />
                   <span className="text-sm font-semibold text-slate-900 whitespace-nowrap">
-                    {isFullKit ? 'Full Kit' : baseProduct.name}
+                    {isFullKit ? 'Full Kit' : count > 0 ? `${count} package${count !== 1 ? 's' : ''}` : 'Your selection'}
                   </span>
                 </div>
                 {count > 0 && (
