@@ -32,31 +32,19 @@ function clearDraft() {
 }
 
 export default function AdminPage() {
-  const [loaded, setLoaded] = useState(false);
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [serverDomain, setServerDomain] = useState("");
-  const [cpanelUser, setCpanelUser] = useState("");
-  const [selectedExts, setSelectedExts] = useState<string[]>([]);
+  const [template, setTemplate] = useState<"confirmation" | "warning">(() => loadDraft()?.template ?? "confirmation");
+  const [email, setEmail] = useState(() => loadDraft()?.email ?? "");
+  const [name, setName] = useState(() => loadDraft()?.name ?? "");
+  const [serverDomain, setServerDomain] = useState(() => loadDraft()?.serverDomain ?? "");
+  const [cpanelUser, setCpanelUser] = useState(() => loadDraft()?.cpanelUser ?? "");
+  const [deactivationTime, setDeactivationTime] = useState(() => loadDraft()?.deactivationTime ?? "3:00 PM WAT today");
+  const [selectedExts, setSelectedExts] = useState<string[]>(() => loadDraft()?.selectedExts ?? []);
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
 
   useEffect(() => {
-    const draft = loadDraft();
-    if (draft) {
-      setEmail(draft.email ?? "");
-      setName(draft.name ?? "");
-      setServerDomain(draft.serverDomain ?? "");
-      setCpanelUser(draft.cpanelUser ?? "");
-      setSelectedExts(draft.selectedExts ?? []);
-    }
-    setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (!loaded) return;
-    saveDraft({ email, name, serverDomain, cpanelUser, selectedExts });
-  }, [email, name, serverDomain, cpanelUser, selectedExts, loaded]);
+    saveDraft({ template, email, name, serverDomain, cpanelUser, deactivationTime, selectedExts });
+  }, [template, email, name, serverDomain, cpanelUser, deactivationTime, selectedExts]);
 
   const fullKitActive = selectedExts.includes(FULL_KIT_ID);
   const baseSelected = selectedExts.includes(baseProduct.id);
@@ -85,6 +73,28 @@ export default function AdminPage() {
     setResult(null);
 
     try {
+      if (template === "warning") {
+        const res = await fetch("/api/send-warning", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            name,
+            serverDomain,
+            deactivationTime,
+          }),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          clearDraft();
+          setResult({ ok: true, message: `Warning email sent! ID: ${data.id}` });
+        } else {
+          setResult({ ok: false, message: data.error || "Failed to send" });
+        }
+        return;
+      }
+
       const res = await fetch("/api/send-confirmation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,10 +126,28 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-slate-50 p-8">
       <div className="mx-auto max-w-xl">
-        <h1 className="mb-2 text-2xl font-bold text-slate-900">Admin — Send Confirmation Email</h1>
-        <p className="mb-8 text-sm text-slate-500">Manually trigger a confirmation email to a customer.</p>
+        <h1 className="mb-2 text-2xl font-bold text-slate-900">Admin — Send Email</h1>
+        <p className="mb-8 text-sm text-slate-500">Select a template and manually send it to any email address.</p>
 
         <div className="space-y-5 rounded-xl border border-slate-200 bg-white p-6">
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-slate-900">Template *</label>
+            <select
+              value={template}
+              onChange={(e) => setTemplate(e.target.value as "confirmation" | "warning")}
+              className="h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 outline-none focus:border-slate-400"
+            >
+              <option value="confirmation">Confirmation — Invoice + setup instructions</option>
+              <option value="warning">Warning — Backup server required (deactivation at 3pm WAT)</option>
+            </select>
+            {template === "warning" && (
+              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-800">
+                System warning: the tool requires a backup server. Current server was turned off and will be deactivated at{" "}
+                <strong>{deactivationTime || "3:00 PM WAT today"}</strong>.
+              </div>
+            )}
+          </div>
+
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-slate-900">Email *</label>
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="alex@example.com" className="h-12 w-full rounded-lg border border-slate-200 px-4 text-sm outline-none focus:border-slate-400" />
@@ -130,6 +158,8 @@ export default function AdminPage() {
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Alex Morgan" className="h-12 w-full rounded-lg border border-slate-200 px-4 text-sm outline-none focus:border-slate-400" />
           </div>
 
+          {template === "confirmation" ? (
+          <>
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-slate-900">Packages</label>
             <p className="mb-3 text-xs text-slate-400">
@@ -178,13 +208,28 @@ export default function AdminPage() {
             <label className="mb-1.5 block text-sm font-semibold text-slate-900">cPanel username</label>
             <input value={cpanelUser} onChange={(e) => setCpanelUser(e.target.value)} placeholder="cpanel_user" className="h-12 w-full rounded-lg border border-slate-200 px-4 text-sm outline-none focus:border-slate-400" />
           </div>
+          </>
+          ) : (
+          <>
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-slate-900">Current server (turned off)</label>
+            <input value={serverDomain} onChange={(e) => setServerDomain(e.target.value)} placeholder="secure.example.com" className="h-12 w-full rounded-lg border border-slate-200 px-4 text-sm outline-none focus:border-slate-400" />
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-slate-900">Deactivation time *</label>
+            <input value={deactivationTime} onChange={(e) => setDeactivationTime(e.target.value)} placeholder="3:00 PM WAT today" className="h-12 w-full rounded-lg border border-slate-200 px-4 text-sm outline-none focus:border-slate-400" />
+            <p className="mt-1.5 text-xs text-slate-400">Shown in the subject line and email body as the deactivation deadline.</p>
+          </div>
+          </>
+          )}
 
           <button
             onClick={handleSend}
-            disabled={!email || !name || sending}
+            disabled={!email || !name || sending || (template === "warning" && !deactivationTime)}
             className="h-12 w-full rounded-lg bg-slate-950 text-sm font-bold text-white transition hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {sending ? "Sending..." : "Send confirmation email"}
+            {sending ? "Sending..." : template === "warning" ? "Send warning email" : "Send confirmation email"}
           </button>
 
           {result && (
